@@ -1,7 +1,5 @@
 // @flow
 
-import conf from './config';
-
 import type {
   AuthData
 } from './types';
