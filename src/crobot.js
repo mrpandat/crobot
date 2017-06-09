@@ -19,7 +19,7 @@ export class Crobot {
 	name: string;
 
 	constructor() {
-		this.rtm = new RtmClient(conf.botToken);
+		this.rtm = new RtmClient(process.env.SLACK_BOT_TOKEN);
 
 		this.initListeners();
 	}
