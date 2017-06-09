@@ -1,14 +1,16 @@
 // @flow
 
 import type {
-  AuthData
+  AuthData,
+	Message,
 } from './types';
 
 const {
   RtmClient,
   CLIENT_EVENTS: {
-    RTM: RTM_EVENTS
+    RTM: RTM_CLIENT_EVENTS
   },
+  RTM_EVENTS
 } = require('@slack/client');
 
 export class Crobot {
@@ -23,8 +25,8 @@ export class Crobot {
 	}
 
 	initListeners(): void {
-		this.rtm.on(RTM_EVENTS.AUTHENTICATED, this.onAuthentication.bind(this));
-		this.rtm.on(RTM_EVENTS.RTM_CONNECTION_OPENED, this.onOpenedConnection.bind(this));
+		this.rtm.on(RTM_CLIENT_EVENTS.AUTHENTICATED, this.onAuthentication.bind(this));
+		this.rtm.on(RTM_EVENTS.MESSAGE, this.onMessageReceived.bind(this));
 	}
 
 	onAuthentication(authData: AuthData): void {
@@ -34,8 +36,8 @@ export class Crobot {
 		console.info(`Logged in as ${this.name} of team ${authData.team.name}, but not yet connected to a channel`);
 	}
 
-	onOpenedConnection(): void {
-		this.rtm.sendMessage('Hello!', this.channel);
+	onMessageReceived(message: Message): void {
+		console.info(`New message received ${message.text}`);
 	}
 
 	start() {
