@@ -19,7 +19,9 @@ export class Crobot {
 	name: string;
 
 	constructor() {
-		this.rtm = new RtmClient(process.env.SLACK_BOT_TOKEN);
+		this.rtm = new RtmClient(process.env.SLACK_BOT_TOKEN, {
+			logLevel: 'error',
+		});
 
 		this.initListeners();
 	}
@@ -27,6 +29,10 @@ export class Crobot {
 	initListeners(): void {
 		this.rtm.on(RTM_CLIENT_EVENTS.AUTHENTICATED, this.onAuthentication.bind(this));
 		this.rtm.on(RTM_EVENTS.MESSAGE, this.onMessageReceived.bind(this));
+
+		process.on('exit', this.disconnect.bind(this));
+		process.on('SIGINT', this.disconnect.bind(this));
+		process.on('uncaughtException', this.disconnect.bind(this));
 	}
 
 	onAuthentication(authData: AuthData): void {
@@ -42,5 +48,10 @@ export class Crobot {
 
 	start() {
 		this.rtm.start();
+	}
+
+	disconnect() {
+		this.rtm.disconnect();
+		console.info('Bot disconnected');
 	}
 }
