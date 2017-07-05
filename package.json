@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "eslint src",
-    "start": "babel src -d lib && node lib/index.js"
+    "start": "babel src/main -d lib && node lib/index.js",
+    "prettier": "node src/prettier/index.js write-changed"
   },
   "keywords": [],
   "author": "",
