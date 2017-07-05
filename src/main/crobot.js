@@ -14,6 +14,11 @@ export class Crobot {
   name: string;
 
   constructor() {
+    const slackBotToken = process.env.SLACK_BOT_TOKEN;
+    if (!slackBotToken) {
+      throw new Error('Slack Bot Token required');
+    }
+
     this.rtm = new RtmClient(process.env.SLACK_BOT_TOKEN, {
       logLevel: 'error',
     });
@@ -65,6 +70,6 @@ export class Crobot {
 
   disconnect() {
     this.rtm.disconnect();
-    console.info(`${this.name} disconnected`);
+    console.info('Bot disconnected');
   }
 }
