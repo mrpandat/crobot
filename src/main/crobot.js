@@ -12,14 +12,13 @@ export class Crobot {
   rtm: RtmClient;
   channel: ?Channel;
   name: string;
+  channelToConnecTo: string;
 
   constructor() {
-    const slackBotToken = process.env.SLACK_BOT_TOKEN;
-    if (!slackBotToken) {
-      throw new Error('Slack Bot Token required');
-    }
+    this.channelToConnecTo = throwIfNull('CHANNEL_TO_CONNECT_TO');
+    const botToken = throwIfNull('BOT_TOKEN');
 
-    this.rtm = new RtmClient(process.env.SLACK_BOT_TOKEN, {
+    this.rtm = new RtmClient(botToken, {
       logLevel: 'error',
     });
 
@@ -44,8 +43,9 @@ export class Crobot {
 
   onAuthentication(authData: AuthData): void {
     this.channel = authData.channels.find(
-      channel => channel.is_member && channel.name === 'general'
+      channel => channel.is_member && channel.name === this.channelToConnecTo
     );
+
     this.name = authData.self.name;
 
     console.info(
@@ -72,4 +72,12 @@ export class Crobot {
     this.rtm.disconnect();
     console.info('Bot disconnected');
   }
+}
+
+function throwIfNull(key: string): string {
+  if (process.env[key] === undefined || process.env[key] === null) {
+    throw new Error(`${key} required`);
+  }
+
+  return process.env[key];
 }
