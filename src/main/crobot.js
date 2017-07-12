@@ -12,10 +12,8 @@ export class Crobot {
   rtm: RtmClient;
   channel: ?Channel;
   name: string;
-  channelToConnecTo: string;
 
   constructor() {
-    this.channelToConnecTo = throwIfNull('CHANNEL_TO_CONNECT_TO');
     const botToken = throwIfNull('BOT_TOKEN');
 
     this.rtm = new RtmClient(botToken, {
@@ -43,7 +41,7 @@ export class Crobot {
 
   onAuthentication(authData: AuthData): void {
     this.channel = authData.channels.find(
-      channel => channel.is_member && channel.name === this.channelToConnecTo
+      channel => channel.is_member && channel.name === 'general'
     );
 
     this.name = authData.self.name;
