@@ -6,6 +6,7 @@ const {
   RtmClient,
   CLIENT_EVENTS: { RTM: RTM_CLIENT_EVENTS },
   RTM_EVENTS,
+  MemoryDataStore,
 } = require('@slack/client');
 
 export class Crobot {
@@ -18,6 +19,7 @@ export class Crobot {
 
     this.rtm = new RtmClient(botToken, {
       logLevel: 'error',
+      dataStore: new MemoryDataStore(),
     });
 
     this.initListeners();
@@ -54,14 +56,15 @@ export class Crobot {
 
   onConnectionOpened(): void {
     if (this.channel) {
-      const {id, name} = this.channel;
-      this.rtm.sendMessage('Ready to get croissanted?', id);
-      console.info(`Connected to #${name} as ${this.name}`);
+      console.info(`Connected to #${this.channel.name} as ${this.name}`);
     }
   }
 
   onMessageReceived(message: Message): void {
-    console.info(`New message from ${message.user} received: ${message.text}`);
+    console.info(
+      `New message from ${this.rtm.dataStore.getUserById(message.user)
+        .name} received: ${message.text}`
+    );
   }
 
   start() {
