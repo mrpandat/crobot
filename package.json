@@ -23,6 +23,7 @@
     "babel-preset-flow": "^6.23.0",
     "eslint": "^3.19.0",
     "eslint-plugin-flowtype": "^2.34.0",
-    "flow-bin": "^0.47.0"
+    "flow-bin": "^0.47.0",
+    "prettier": "^1.5.2"
   }
 }
