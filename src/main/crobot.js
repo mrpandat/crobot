@@ -54,12 +54,14 @@ export class Crobot {
 
   onConnectionOpened(): void {
     if (this.channel) {
-      console.info(`Connected to #${this.channel.name} as ${this.name}`);
+      const {id, name} = this.channel;
+      this.rtm.sendMessage('Ready to get croissanted?', id);
+      console.info(`Connected to #${name} as ${this.name}`);
     }
   }
 
   onMessageReceived(message: Message): void {
-    console.info(`New message received ${message.text}`);
+    console.info(`New message from ${message.user} received: ${message.text}`);
   }
 
   start() {
