@@ -6,7 +6,13 @@
   "scripts": {
     "test": "eslint src",
     "start": "babel src/main -d lib && node lib/index.js",
-    "prettier": "node src/prettier/index.js write-changed"
+    "prettier": "node src/prettier/index.js write-changed",
+    "precommit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier -l --single-quote --trailing-comma es5 --parser babylon"
+    ]
   },
   "keywords": [],
   "author": "",
@@ -24,6 +30,8 @@
     "eslint": "^3.19.0",
     "eslint-plugin-flowtype": "^2.34.0",
     "flow-bin": "^0.47.0",
+    "husky": "^0.14.3",
+    "lint-staged": "^4.0.1",
     "prettier": "^1.5.2"
   }
 }
