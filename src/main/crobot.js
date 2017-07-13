@@ -9,6 +9,8 @@ import {
   MemoryDataStore,
 } from '@slack/client';
 
+const { RTM: RTM_CLIENT_EVENTS } = CLIENT_EVENTS;
+
 export class Crobot {
   rtm: RtmClient;
   channel: ?Channel;
@@ -31,11 +33,11 @@ export class Crobot {
 
   initListeners(): void {
     this.rtm.on(
-      CLIENT_EVENTS.RTM.AUTHENTICATED,
+      RTM_CLIENT_EVENTS.AUTHENTICATED,
       this.onAuthentication.bind(this)
     );
     this.rtm.on(
-      CLIENT_EVENTS.RTM.RTM_CONNECTION_OPENED,
+      RTM_CLIENT_EVENTS.RTM_CONNECTION_OPENED,
       this.onConnectionOpened.bind(this)
     );
     this.rtm.on(RTM_EVENTS.MESSAGE, this.onMessageReceived.bind(this));
