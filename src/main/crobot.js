@@ -13,6 +13,10 @@ export class Crobot {
   rtm: RtmClient;
   channel: ?Channel;
   name: string;
+  croissantedUsers: {
+    [key: string]: number,
+  } = {};
+  taggedUserRegExp: RegExp = new RegExp(/\<@(U[A-Z0-9]{8})\>/g);
 
   constructor() {
     const botToken = throwIfNull('BOT_TOKEN');
@@ -61,19 +65,38 @@ export class Crobot {
   }
 
   onMessageReceived(message: Message): void {
-    console.info(
-      `New message from ${this.rtm.dataStore.getUserById(message.user)
-        .name} received: ${message.text}`
-    );
+    const { text } = message;
+    const taggedUsernames = this.extractTaggedUsernamesFromText(text);
+
+    if (taggedUsernames.includes(this.name)) {
+      this.croissantedUsers[message.user] = this.croissantedUsers[message.user]
+        ? this.croissantedUsers[message.user] + 1
+        : 1;
+      console.info(JSON.stringify(this.croissantedUsers));
+    }
   }
 
-  start() {
+  start(): void {
     this.rtm.start();
   }
 
-  disconnect() {
+  disconnect(): void {
     this.rtm.disconnect();
     console.info('Bot disconnected');
+  }
+
+  extractTaggedUsernamesFromText(text: string): string[] {
+    const taggedUsers = [];
+
+    let match: string = this.taggedUserRegExp.exec(text);
+    while (match !== null) {
+      taggedUsers.push(match[1]);
+      match = this.taggedUserRegExp.exec(text);
+    }
+
+    return taggedUsers.map(
+      taggedUser => this.rtm.dataStore.getUserById(taggedUser).name
+    );
   }
 }
 
