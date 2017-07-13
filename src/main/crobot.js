@@ -2,12 +2,12 @@
 
 import type { AuthData, Channel, Message } from './types';
 
-const {
+import {
   RtmClient,
-  CLIENT_EVENTS: { RTM: RTM_CLIENT_EVENTS },
+  CLIENT_EVENTS,
   RTM_EVENTS,
   MemoryDataStore,
-} = require('@slack/client');
+} from '@slack/client';
 
 export class Crobot {
   rtm: RtmClient;
@@ -31,11 +31,11 @@ export class Crobot {
 
   initListeners(): void {
     this.rtm.on(
-      RTM_CLIENT_EVENTS.AUTHENTICATED,
+      CLIENT_EVENTS.RTM.AUTHENTICATED,
       this.onAuthentication.bind(this)
     );
     this.rtm.on(
-      RTM_CLIENT_EVENTS.RTM_CONNECTION_OPENED,
+      CLIENT_EVENTS.RTM.RTM_CONNECTION_OPENED,
       this.onConnectionOpened.bind(this)
     );
     this.rtm.on(RTM_EVENTS.MESSAGE, this.onMessageReceived.bind(this));
