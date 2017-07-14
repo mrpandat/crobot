@@ -11,14 +11,16 @@ import {
 
 const { RTM: RTM_CLIENT_EVENTS } = CLIENT_EVENTS;
 
+const taggedUserRegExp: RegExp = new RegExp(/\<@(U[A-Z0-9]{8})\>/g);
+
 export class Crobot {
   rtm: RtmClient;
   channel: ?Channel;
   name: string;
+
   croissantedUsers: {
     [key: string]: number,
   } = {};
-  taggedUserRegExp: RegExp = new RegExp(/\<@(U[A-Z0-9]{8})\>/g);
 
   constructor() {
     const botToken = throwIfNull('BOT_TOKEN');
@@ -90,10 +92,10 @@ export class Crobot {
   extractTaggedUsernamesFromText(text: string): string[] {
     const taggedUsers = [];
 
-    let match: string = this.taggedUserRegExp.exec(text);
+    let match: string = taggedUserRegExp.exec(text);
     while (match !== null) {
       taggedUsers.push(match[1]);
-      match = this.taggedUserRegExp.exec(text);
+      match = taggedUserRegExp.exec(text);
     }
 
     return taggedUsers.map(
