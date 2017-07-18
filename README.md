@@ -51,8 +51,8 @@ This will output something like:
 
 
 ## Next things to do
-- Add the possibility to get the croissanted list
 - Find an easy way to tell Crobot that someone paid one of his debts
 - Add the possibility for someone to get blacklisted with associated documentation
 - Add an help command to explain how Crobot works
+- Switch from RTM API to Web API
 - Think of any other functionalities to add
