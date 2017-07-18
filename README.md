@@ -38,6 +38,18 @@ This command will output how many times the *croissanted* user have to bring bre
 
 > Looks like `<user>` needs to bring breakfast `<count>` times!
 
+### Get the Crobot's list
+You can ask Crobot the list of users' breakfast debts by pinging it with the keyword `list`
+
+> @crobot list
+
+This will output something like:
+
+> - `<user1>`: `<count>` times
+> - `<user2>`: `<count>` times
+> - `<user3>`: `<count>` times
+
+
 ## Next things to do
 - Add the possibility to get the croissanted list
 - Find an easy way to tell Crobot that someone paid one of his debts
