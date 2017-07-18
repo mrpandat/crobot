@@ -2104,6 +2104,10 @@ pkginfo@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/pkginfo/-/pkginfo-0.4.0.tgz#349dbb7ffd38081fcadc0853df687f0c7744cd65"
 
+plural@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/plural/-/plural-0.3.0.tgz#68ac0b3d47379776d6441efb47c83a09cd65394c"
+
 pluralize@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/pluralize/-/pluralize-1.2.1.tgz#d1a21483fd22bb41e58a12fa3421823140897c45"

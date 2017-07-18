@@ -1,5 +1,7 @@
 // @flow
 
+import plural from 'plural';
+
 import type { AuthData, Channel, Message } from './types';
 
 import {
@@ -74,7 +76,10 @@ export class Crobot {
 
     if (taggedUsernames.includes(this.name)) {
       if (text.match(/croissant/g)) {
-        this.onCroissantedUser(message.user);
+        return this.onCroissantedUser(message.user);
+      }
+      if (text.match(/list/g)) {
+        return this.onCroissantedList();
       }
     }
   }
@@ -83,14 +88,33 @@ export class Crobot {
     const croissantsCount = (this.croissantedUsers[user] || 0) + 1;
     this.croissantedUsers[user] = croissantsCount;
 
-    if (this.channel && this.channel.id) {
-      const croissantsString =
-        croissantsCount > 1 ? ` ${croissantsCount} times` : '';
+    this.sendMessage(
+      `Looks like <@${user}> needs to bring breakfast ${croissantsCount} ${plural(
+        'time',
+        croissantsCount
+      )}! :sunglasses:`
+    );
+  }
 
-      this.rtm.sendMessage(
-        `Looks like <@${user}> needs to bring breakfast${croissantsString}! :sunglasses:`,
-        this.channel.id
-      );
+  onCroissantedList(): void {
+    const croissantedList = Object.keys(
+      this.croissantedUsers
+    ).map(croissantedUser => {
+      const croissantedUserCount = this.croissantedUsers[croissantedUser];
+      return `- <@${croissantedUser}>: ${croissantedUserCount} ${plural(
+        'time',
+        croissantedUserCount
+      )}`;
+    });
+
+    croissantedList.length
+      ? this.sendMessage(croissantedList.join('\n'))
+      : this.sendMessage('No one is going to bring breakfast :scream:');
+  }
+
+  sendMessage(message: string): void {
+    if (this.channel && this.channel.id) {
+      this.rtm.sendMessage(message, this.channel.id);
     }
   }
 
