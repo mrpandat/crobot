@@ -73,10 +73,24 @@ export class Crobot {
     const taggedUsernames = this.extractTaggedUsernamesFromText(text);
 
     if (taggedUsernames.includes(this.name)) {
-      this.croissantedUsers[message.user] = this.croissantedUsers[message.user]
-        ? this.croissantedUsers[message.user] + 1
-        : 1;
-      console.info(JSON.stringify(this.croissantedUsers));
+      if (text.match(/croissant/g)) {
+        this.onCroissantedUser(message.user);
+      }
+    }
+  }
+
+  onCroissantedUser(user: string): void {
+    const croissantsCount = (this.croissantedUsers[user] || 0) + 1;
+    this.croissantedUsers[user] = croissantsCount;
+
+    if (this.channel && this.channel.id) {
+      const croissantsString =
+        croissantsCount > 1 ? ` ${croissantsCount} times` : '';
+
+      this.rtm.sendMessage(
+        `Looks like <@${user}> needs to bring breakfast${croissantsString}! :sunglasses:`,
+        this.channel.id
+      );
     }
   }
 
