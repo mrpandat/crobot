@@ -6,13 +6,11 @@
   "scripts": {
     "test": "eslint src",
     "start": "babel src/main -d lib && node lib/index.js",
-    "prettier": "node src/prettier/index.js write-changed",
+    "prettier": "node prettier/index.js write-changed",
     "precommit": "lint-staged"
   },
   "lint-staged": {
-    "*.js": [
-      "prettier -l --single-quote --trailing-comma es5 --parser babylon"
-    ]
+    "*.js": ["prettier -l --single-quote --trailing-comma es5 --parser babylon"]
   },
   "keywords": [],
   "author": "",
