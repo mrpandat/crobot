@@ -24,6 +24,8 @@ export class Crobot {
     [key: string]: number,
   } = {};
 
+  blacklistedUsers: string[] = [];
+
   constructor() {
     const botToken = throwIfNull('BOT_TOKEN');
 
@@ -78,6 +80,9 @@ export class Crobot {
       if (text.match(/croissant/g)) {
         return this.onCroissantedUser(message.user);
       }
+      if (text.match(/blacklist me/g)) {
+        return this.onBlacklistedUser(message.user);
+      }
       if (text.match(/list/g)) {
         return this.onCroissantedList();
       }
@@ -85,6 +90,12 @@ export class Crobot {
   }
 
   onCroissantedUser(user: string): void {
+    if (this.blacklistedUsers.includes(user)) {
+      return this.sendMessage(
+        `<@${user}> is blacklisted and can't be croissanted. You mad bro? :stuck_out_tongue:`
+      );
+    }
+
     const croissantsCount = (this.croissantedUsers[user] || 0) + 1;
     this.croissantedUsers[user] = croissantsCount;
 
@@ -94,6 +105,28 @@ export class Crobot {
         croissantsCount
       )}! :sunglasses:`
     );
+  }
+
+  onBlacklistedUser(user: string): void {
+    const croissantsCount = this.croissantedUsers[user];
+
+    if (this.blacklistedUsers.includes(user)) {
+      this.sendMessage(`Hey <@${user}>, you're already blacklisted!`);
+    } else {
+      this.sendMessage(
+        `<@${user}> you've successfully been blacklisted! You can't eat breakfast brought by your colleagues anymore. I feel sad for you :sob:`
+      );
+      this.blacklistedUsers.push(user);
+    }
+
+    if (croissantsCount) {
+      this.sendMessage(
+        `Just remember that it's not because you're blacklisted that you don't have to pay your debts. You still have to bring breakfast ${croissantsCount} ${plural(
+          'time',
+          croissantsCount
+        )}`
+      );
+    }
   }
 
   onCroissantedList(): void {

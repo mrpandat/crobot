@@ -52,7 +52,8 @@ This will output something like:
 
 ## Next things to do
 - Find an easy way to tell Crobot that someone paid one of his debts
-- Add the possibility for someone to get blacklisted with associated documentation
+- Add documentation about the fact of being blacklisted
+- Add a command to get the list of blacklisted users
 - Add an help command to explain how Crobot works
 - Switch from RTM API to Web API
 - Think of any other functionalities to add
