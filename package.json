@@ -6,11 +6,18 @@
   "scripts": {
     "test": "eslint src",
     "start": "babel src/main -d lib && node lib/index.js",
-    "prettier": "prettier write-changed",
+    "prettier":
+      "(git diff --name-only -- '*.js' && git diff --cached --name-only -- '*.js') | xargs yarn prettier-write",
+    "prettier-check":
+      "prettier --list-different --single-quote --trailing-comma es5 --parser babylon",
+    "prettier-debug":
+      "prettier --debug-check --single-quote --trailing-comma es5 --parser babylon",
+    "prettier-write":
+      "prettier --write --single-quote --trailing-comma es5 --parser babylon",
     "precommit": "lint-staged"
   },
   "lint-staged": {
-    "*.js": ["prettier -l --single-quote --trailing-comma es5 --parser babylon"]
+    "*.js": ["yarn prettier-check"]
   },
   "keywords": [],
   "author": "",
