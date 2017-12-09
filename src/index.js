@@ -1,6 +1,6 @@
 // @flow
 
-import {Crobot} from './crobot';
+import { Crobot } from './crobot';
 
 const crobot = new Crobot();
 
