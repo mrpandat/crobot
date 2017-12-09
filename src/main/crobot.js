@@ -61,8 +61,9 @@ export class Crobot {
     this.name = authData.self.name;
 
     console.info(
-      `Logged in as ${this.name} of team ${authData.team
-        .name}, but not yet connected to a channel`
+      `Logged in as ${this.name} of team ${
+        authData.team.name
+      }, but not yet connected to a channel`
     );
   }
 
@@ -130,15 +131,15 @@ export class Crobot {
   }
 
   onCroissantedList(): void {
-    const croissantedList = Object.keys(
-      this.croissantedUsers
-    ).map(croissantedUser => {
-      const croissantedUserCount = this.croissantedUsers[croissantedUser];
-      return `- <@${croissantedUser}>: ${croissantedUserCount} ${plural(
-        'time',
-        croissantedUserCount
-      )}`;
-    });
+    const croissantedList = Object.keys(this.croissantedUsers).map(
+      croissantedUser => {
+        const croissantedUserCount = this.croissantedUsers[croissantedUser];
+        return `- <@${croissantedUser}>: ${croissantedUserCount} ${plural(
+          'time',
+          croissantedUserCount
+        )}`;
+      }
+    );
 
     croissantedList.length
       ? this.sendMessage(croissantedList.join('\n'))
