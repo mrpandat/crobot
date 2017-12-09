@@ -13,7 +13,7 @@ import {
 
 const { RTM: RTM_CLIENT_EVENTS } = CLIENT_EVENTS;
 
-const taggedUserRegExp: RegExp = new RegExp(/\<@(U[A-Z0-9]{8})\>/g);
+const taggedUserRegExp: RegExp = new RegExp(/<@(U[A-Z0-9]{8})>/g);
 
 export class Crobot {
   rtm: RtmClient;
