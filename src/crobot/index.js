@@ -55,7 +55,7 @@ export class Crobot {
 
   onAuthentication(authData: AuthData): void {
     this.channel = authData.channels.find(
-      channel => channel.is_member && channel.name === 'general'
+      channel => channel.is_member && channel.name === 'crobot_test'
     );
 
     this.name = authData.self.name;
