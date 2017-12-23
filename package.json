@@ -4,20 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "eslint src",
+    "test": "yarn prettier:check && yarn eslint && yarn flow",
+    "eslint": "eslint ./src",
+    "flow": "flow --color always",
     "start": "babel src -d lib && node lib/index.js",
-    "prettier":
-      "(git diff --name-only -- '*.js' && git diff --cached --name-only -- '*.js') | xargs yarn prettier-write",
-    "prettier-check":
-      "prettier --list-different --single-quote --trailing-comma es5 --parser babylon",
-    "prettier-debug":
-      "prettier --debug-check --single-quote --trailing-comma es5 --parser babylon",
-    "prettier-write":
-      "prettier --write --single-quote --trailing-comma es5 --parser babylon",
+    "prettier": "prettier --single-quote --trailing-comma es5",
+    "prettier:check": "yarn prettier --list-different ./src/**/*.js",
     "precommit": "lint-staged"
   },
   "lint-staged": {
-    "*.js": ["yarn prettier-check"]
+    "*.js": ["prettier --write", "flow", "eslint --fix", "git add"]
   },
   "keywords": [],
   "author": "",
