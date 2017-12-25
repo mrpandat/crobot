@@ -1,23 +1,27 @@
 {
   "name": "crobot",
   "version": "1.0.0",
-  "description": "",
+  "description":
+    "Bot to maintain a list of people who should bring croissants to work place",
   "main": "index.js",
   "scripts": {
     "test": "yarn prettier:check && yarn eslint && yarn flow",
     "eslint": "eslint ./src",
     "flow": "flow --color always",
     "start": "babel src -d lib && node lib/index.js",
-    "prettier": "prettier --single-quote --trailing-comma es5",
-    "prettier:check": "yarn prettier --list-different ./src/**/*.js",
+    "prettier:write": "prettier --write ./src/**/*.js",
+    "prettier:check": "prettier --list-different ./src/**/*.js",
     "precommit": "lint-staged && yarn flow"
   },
   "lint-staged": {
     "*.js": ["prettier --write", "eslint --fix", "git add"]
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "prettier": {
+    "trailingComma": "es5",
+    "singleQuote": true
+  },
+  "keywords": ["slackbot", "breakfast", "workplace", "croissant"],
+  "license": "MIT",
   "dependencies": {
     "@slack/client": "^3.10.0"
   },
