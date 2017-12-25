@@ -1,9 +1,5 @@
 // @flow
 
-import plural from 'plural';
-
-import type { AuthData, Channel, Message } from './types';
-
 import {
   RtmClient,
   CLIENT_EVENTS,
@@ -11,20 +7,24 @@ import {
   MemoryDataStore,
 } from '@slack/client';
 
-const { RTM: RTM_CLIENT_EVENTS } = CLIENT_EVENTS;
+import {
+  increaseUserCroissantsCount,
+  getUserCroissantsCount,
+  getCroissantedList,
+} from './croissants';
+import { blackListUser, isBlackListed } from './blacklist';
 
-const taggedUserRegExp: RegExp = new RegExp(/<@(U[A-Z0-9]{8})>/g);
+import { extractTaggedUsersFromText, throwIfNull } from './utils';
+
+import type { AuthData, Channel, Message } from './types';
+
+const { RTM: RTM_CLIENT_EVENTS } = CLIENT_EVENTS;
 
 export class Crobot {
   rtm: RtmClient;
   channel: ?Channel;
   name: string;
-
-  croissantedUsers: {
-    [key: string]: number,
-  } = {};
-
-  blacklistedUsers: string[] = [];
+  isConnected: boolean;
 
   constructor() {
     const botToken = throwIfNull('BOT_TOKEN');
@@ -70,80 +70,47 @@ export class Crobot {
   onConnectionOpened(): void {
     if (this.channel) {
       console.info(`Connected to #${this.channel.name} as ${this.name}`);
+      this.isConnected = true;
     }
   }
 
   onMessageReceived(message: Message): void {
     const { text } = message;
-    const taggedUsernames = this.extractTaggedUsernamesFromText(text);
+    const taggedUsernames: string[] = extractTaggedUsersFromText(text).map(
+      taggedUser => this.rtm.dataStore.getUserById(taggedUser).name
+    );
 
     if (taggedUsernames.includes(this.name)) {
+      let responseMessage;
+
       if (text.match(/croissant/g)) {
-        return this.onCroissantedUser(message.user);
+        responseMessage = this.onCroissantedUser(message.user);
+      } else if (text.match(/blacklist me/g)) {
+        responseMessage = this.onBlacklistedUser(message.user);
+      } else if (text.match(/list/g)) {
+        responseMessage = getCroissantedList();
       }
-      if (text.match(/blacklist me/g)) {
-        return this.onBlacklistedUser(message.user);
-      }
-      if (text.match(/list/g)) {
-        return this.onCroissantedList();
+
+      if (responseMessage) {
+        this.sendMessage(responseMessage);
       }
     }
   }
 
-  onCroissantedUser(user: string): void {
-    if (this.blacklistedUsers.includes(user)) {
-      return this.sendMessage(
-        `<@${user}> is blacklisted and can't be croissanted. You mad bro? :stuck_out_tongue:`
-      );
+  onCroissantedUser(user: string): string {
+    if (isBlackListed(user)) {
+      return `<@${user}> is blacklisted and can't be croissanted. You mad bro? :stuck_out_tongue:`;
     }
 
-    const croissantsCount = (this.croissantedUsers[user] || 0) + 1;
-    this.croissantedUsers[user] = croissantsCount;
+    const newCroissantsCount = increaseUserCroissantsCount(user);
 
-    this.sendMessage(
-      `Looks like <@${user}> needs to bring breakfast ${croissantsCount} ${plural(
-        'time',
-        croissantsCount
-      )}! :sunglasses:`
-    );
+    return `<@${user}> now needs to bring breakfast ${newCroissantsCount} time(s)! :sunglasses:`;
   }
 
-  onBlacklistedUser(user: string): void {
-    const croissantsCount = this.croissantedUsers[user];
+  onBlacklistedUser(user: string): string {
+    const croissantsCount = getUserCroissantsCount(user);
 
-    if (this.blacklistedUsers.includes(user)) {
-      this.sendMessage(`Hey <@${user}>, you're already blacklisted!`);
-    } else {
-      this.sendMessage(
-        `<@${user}> you've successfully been blacklisted! You can't eat breakfast brought by your colleagues anymore. I feel sad for you :sob:`
-      );
-      this.blacklistedUsers.push(user);
-    }
-
-    if (croissantsCount) {
-      this.sendMessage(
-        `Just remember that it's not because you're blacklisted that you don't have to pay your debts. You still have to bring breakfast ${croissantsCount} ${plural(
-          'time',
-          croissantsCount
-        )}`
-      );
-    }
-  }
-
-  onCroissantedList(): void {
-    const croissantedList = Object.keys(this.croissantedUsers).map(
-      croissantedUser => {
-        const croissantedUserCount = this.croissantedUsers[croissantedUser];
-        return `- <@${croissantedUser}>: ${croissantedUserCount} ${plural(
-          'time',
-          croissantedUserCount
-        )}`;
-      }
-    );
-
-    croissantedList.length
-      ? this.sendMessage(croissantedList.join('\n'))
-      : this.sendMessage('No one is going to bring breakfast :scream:');
+    return blackListUser(user, croissantsCount);
   }
 
   sendMessage(message: string): void {
@@ -157,29 +124,10 @@ export class Crobot {
   }
 
   disconnect(): void {
-    this.rtm.disconnect();
-    console.info('Bot disconnected');
-  }
-
-  extractTaggedUsernamesFromText(text: string): string[] {
-    const taggedUsers = [];
-
-    let match: string = taggedUserRegExp.exec(text);
-    while (match !== null) {
-      taggedUsers.push(match[1]);
-      match = taggedUserRegExp.exec(text);
+    if (this.isConnected) {
+      this.rtm.disconnect();
+      console.info('Bot disconnected');
+      this.isConnected = false;
     }
-
-    return taggedUsers.map(
-      taggedUser => this.rtm.dataStore.getUserById(taggedUser).name
-    );
   }
-}
-
-function throwIfNull(key: string): string {
-  if (process.env[key] === undefined || process.env[key] === null) {
-    throw new Error(`${key} required`);
-  }
-
-  return process.env[key];
 }

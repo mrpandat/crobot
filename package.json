@@ -10,17 +10,16 @@
     "start": "babel src -d lib && node lib/index.js",
     "prettier": "prettier --single-quote --trailing-comma es5",
     "prettier:check": "yarn prettier --list-different ./src/**/*.js",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged && yarn flow"
   },
   "lint-staged": {
-    "*.js": ["prettier --write", "flow", "eslint --fix", "git add"]
+    "*.js": ["prettier --write", "eslint --fix", "git add"]
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@slack/client": "^3.10.0",
-    "plural": "^0.3.0"
+    "@slack/client": "^3.10.0"
   },
   "devDependencies": {
     "babel-cli": "6.26.0",
@@ -32,6 +31,7 @@
     "eslint": "4.14.0",
     "eslint-plugin-flowtype": "2.40.1",
     "flow-bin": "0.61.0",
+    "flow-typed": "^2.2.3",
     "husky": "0.14.3",
     "lint-staged": "6.0.0",
     "prettier": "1.9.2"
