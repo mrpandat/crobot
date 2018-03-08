@@ -23,7 +23,7 @@
   "keywords": ["slackbot", "breakfast", "workplace", "croissant"],
   "license": "MIT",
   "dependencies": {
-    "@slack/client": "^3.10.0"
+    "@slack/client": "^4.0.0"
   },
   "devDependencies": {
     "babel-cli": "6.26.0",
