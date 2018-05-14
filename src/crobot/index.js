@@ -9,6 +9,7 @@ import {
 
 import {
   increaseUserCroissantsCount,
+  decreaseUserCroissantsCount,
   getUserCroissantsCount,
   getCroissantedList,
 } from './croissants';
@@ -50,7 +51,10 @@ export class Crobot {
 
     process.on('exit', this.disconnect.bind(this));
     process.on('SIGINT', this.disconnect.bind(this));
-    process.on('uncaughtException', this.disconnect.bind(this));
+    process.on('uncaughtException', err => {
+      console.info('ERROR: ', err);
+      return this.disconnect.bind(this);
+    });
   }
 
   onAuthentication(authData: AuthData): void {
@@ -89,6 +93,12 @@ export class Crobot {
         responseMessage = this.onBlacklistedUser(message.user);
       } else if (text.match(/list/g)) {
         responseMessage = getCroissantedList();
+      } else if (text.match(/paid/g)) {
+        responseMessage = this.onUncroissantedUser(message.user);
+      } else {
+        responseMessage = `<@${
+          message.user
+        }> I did not understand your message, sorry !`;
       }
 
       if (responseMessage) {
@@ -105,6 +115,12 @@ export class Crobot {
     const newCroissantsCount = increaseUserCroissantsCount(user);
 
     return `<@${user}> now needs to bring breakfast ${newCroissantsCount} time(s)! :sunglasses:`;
+  }
+
+  onUncroissantedUser(user: string): string {
+    const newCroissantsCount = decreaseUserCroissantsCount(user);
+
+    return `<@${user}> paid his/her croissants and now needs to bring breakfast ${newCroissantsCount} time(s)! :sunglasses:`;
   }
 
   onBlacklistedUser(user: string): string {
