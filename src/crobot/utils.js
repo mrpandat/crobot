@@ -21,3 +21,19 @@ export function throwIfNull(key: string): string {
 
   return process.env[key];
 }
+
+export function userIdToUsername(id: string): string {
+  for (var uid in this.users) {
+    if (this.users[uid].id == id) {
+      return this.users[uid].name;
+    }
+  }
+}
+
+export function usernameToUserid(username: string): string {
+  for (var uid in this.users) {
+    if (this.users[uid].name == username) {
+      return this.users[uid].id;
+    }
+  }
+}
