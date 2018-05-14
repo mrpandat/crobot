@@ -1,27 +1,87 @@
 // @flow
 
 const croissantedUsers: {
-  [key: string]: number,
+  [key: string]: {
+    debt: number,
+    vote: [string],
+  }
 } = {};
 
 export function getUserCroissantsCount(user: string): number {
-  return croissantedUsers[user] || 0;
+  return croissantedUsers[user] ? croissantedUsers[user].debt : 0;
+}
+
+export function getUserVoteCount(croissantedUser: string): number {
+  return croissantedUsers[croissantedUser]
+    ? croissantedUsers[croissantedUser].vote.length
+    : 0;
+}
+
+export function increaseVoteList(croissantedUser: string, userVote: string) {
+  croissantedUsers[croissantedUser].vote.push(userVote);
+}
+
+export function resetVoteList(croissantedUser: string) {
+  croissantedUsers[croissantedUser].vote = [];
+}
+
+export function checkIfUserHasVoted(user: string, userVote: string) {
+  if (
+    croissantedUsers[user] &&
+    croissantedUsers[user].vote &&
+    !croissantedUsers[user].vote.indexOf(userVote) > 0
+  ) {
+    return true;
+  }
+  return false;
 }
 
 export function increaseUserCroissantsCount(user: string): number {
   const croissantsCount = getUserCroissantsCount(user) + 1;
-  croissantedUsers[user] = croissantsCount;
-
+  croissantedUsers[user] = {
+    debt: croissantsCount,
+    vote: [],
+  };
   return croissantsCount;
 }
 
 export function decreaseUserCroissantsCount(user: string): number {
   const croissantsCount = getUserCroissantsCount(user) - 1;
   if (croissantsCount >= 0) {
-    croissantedUsers[user] = croissantsCount;
+    croissantedUsers[user] = {
+      debt: croissantsCount,
+      vote: [],
+    };
     return croissantsCount;
   }
   return 0;
+}
+
+export function voteForUncroissantedUser(
+  croissantedUser: string,
+  userVote: string
+): string {
+  if (croissantedUser == userVote) {
+    decreaseUserCroissantsCount(croissantedUser);
+    return `<@${croissantedUser}> You are a real cheater are'nt you ? One more breakfast to bring !`;
+  }
+  if (getUserCroissantsCount(croissantedUser) === 0) {
+    return `<@${croissantedUser}> Currently has no debt !`;
+  }
+  let nbVotes = getUserVoteCount(croissantedUser);
+  if (nbVotes < 2) {
+    if (!checkIfUserHasVoted(croissantedUser, userVote)) {
+      increaseVoteList(croissantedUser, userVote);
+      nbVotes++;
+    } else {
+      return `<@${userVote}> You can't vote two times, cheater !`;
+    }
+  }
+  if (nbVotes === 2) {
+    const newCroissantsCount = decreaseUserCroissantsCount(croissantedUser);
+    return `<@${croissantedUser}> paid his/her croissants and now needs to bring breakfast ${newCroissantsCount} time(s)! :sunglasses:`;
+  }
+  return `<@${userVote}> Your vote has been take in count`;
 }
 
 export function getCroissantedList(): string {

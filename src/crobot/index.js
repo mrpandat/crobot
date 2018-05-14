@@ -12,18 +12,24 @@ import {
   decreaseUserCroissantsCount,
   getUserCroissantsCount,
   getCroissantedList,
+  voteForUncroissantedUser,
 } from './croissants';
 import { blackListUser, isBlackListed } from './blacklist';
 
-import { extractTaggedUsersFromText, throwIfNull } from './utils';
+import {
+  extractTaggedUsersFromText,
+  throwIfNull,
+  usernameToUserid,
+} from './utils';
 
-import type { AuthData, Channel, Message } from './types';
+import type { AuthData, Channel, Message, User } from './types';
 
 const { RTM: RTM_CLIENT_EVENTS } = CLIENT_EVENTS;
 
 export class Crobot {
   rtm: RtmClient;
   channel: ?Channel;
+  users: User[];
   name: string;
   isConnected: boolean;
 
@@ -58,6 +64,7 @@ export class Crobot {
   }
 
   onAuthentication(authData: AuthData): void {
+    this.users = authData.users;
     this.channel = authData.channels.find(
       channel => channel.is_member && channel.name === 'crobot_test'
     );
@@ -86,15 +93,20 @@ export class Crobot {
 
     if (taggedUsernames.includes(this.name)) {
       let responseMessage;
-
+      let sendUser = message.user;
       if (text.match(/croissant/g)) {
-        responseMessage = this.onCroissantedUser(message.user);
+        responseMessage = this.onCroissantedUser(sendUser);
       } else if (text.match(/blacklist me/g)) {
-        responseMessage = this.onBlacklistedUser(message.user);
+        responseMessage = this.onBlacklistedUser(sendUser);
       } else if (text.match(/list/g)) {
         responseMessage = getCroissantedList();
       } else if (text.match(/paid/g)) {
-        responseMessage = this.onUncroissantedUser(message.user);
+        responseMessage = this.onUncroissantedUser(sendUser);
+      } else if (text.match(/a payé/g)) {
+        responseMessage = this.onVoteForUncroissantedUser(
+          sendUser,
+          taggedUsernames
+        );
       } else {
         responseMessage = `<@${
           message.user
@@ -123,9 +135,19 @@ export class Crobot {
     return `<@${user}> paid his/her croissants and now needs to bring breakfast ${newCroissantsCount} time(s)! :sunglasses:`;
   }
 
+  onVoteForUncroissantedUser(user: string, taggedUsernames: [string]): string {
+    if (taggedUsernames[1]) {
+      return voteForUncroissantedUser(
+        usernameToUserid(taggedUsernames[1], this.users),
+        user
+      );
+    } else {
+      return `<@${user}> You need to specify who paid his/her breakfast :o`;
+    }
+  }
+
   onBlacklistedUser(user: string): string {
     const croissantsCount = getUserCroissantsCount(user);
-
     return blackListUser(user, croissantsCount);
   }
 

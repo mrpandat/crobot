@@ -22,18 +22,18 @@ export function throwIfNull(key: string): string {
   return process.env[key];
 }
 
-export function userIdToUsername(id: string): string {
-  for (var uid in this.users) {
-    if (this.users[uid].id == id) {
-      return this.users[uid].name;
+export function userIdToUsername(id: string, users: any): string {
+  for (var uid in users) {
+    if (users[uid].id == id) {
+      return users[uid].name;
     }
   }
 }
 
-export function usernameToUserid(username: string): string {
-  for (var uid in this.users) {
-    if (this.users[uid].name == username) {
-      return this.users[uid].id;
+export function usernameToUserid(username: string, users: any): string {
+  for (var uid in users) {
+    if (users[uid].name == username) {
+      return users[uid].id;
     }
   }
 }

@@ -2,6 +2,7 @@
 
 export type AuthData = {
   channels: Channel[],
+  users: User[],
   self: {
     name: string,
   },
@@ -12,6 +13,11 @@ export type AuthData = {
 
 export type Channel = {
   is_member: boolean,
+  name: string,
+  id: string,
+};
+
+export type User = {
   name: string,
   id: string,
 };
