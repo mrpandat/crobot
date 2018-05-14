@@ -15,6 +15,15 @@ export function increaseUserCroissantsCount(user: string): number {
   return croissantsCount;
 }
 
+export function decreaseUserCroissantsCount(user: string): number {
+  const croissantsCount = getUserCroissantsCount(user) - 1;
+  if (croissantsCount >= 0) {
+    croissantedUsers[user] = croissantsCount;
+    return croissantsCount;
+  }
+  return 0;
+}
+
 export function getCroissantedList(): string {
   if (croissantedUsers.length) {
     return 'No one has to bring breakfast :scream:';
