@@ -11,7 +11,7 @@ export function getUserCroissantsCount(user: string): number {
   return croissantedUsers[user] ? croissantedUsers[user].debt : 0;
 }
 
-export function getvotingUserCount(croissantedUser: string): number {
+export function getUserVoteCount(croissantedUser: string): number {
   return croissantedUsers[croissantedUser] &&
     croissantedUsers[croissantedUser].vote
     ? croissantedUsers[croissantedUser].vote.length
@@ -72,7 +72,7 @@ export function voteForUncroissantedUser(
     return `<@${croissantedUser}> Currently has no debt !`;
   }
 
-  let nbVotes = getvotingUserCount(croissantedUser);
+  let nbVotes = getUserVoteCount(croissantedUser);
   if (nbVotes < 2) {
     if (!hasUserVoted(croissantedUser, votingUser)) {
       increaseVoteList(croissantedUser, votingUser);
