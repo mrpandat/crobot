@@ -27,6 +27,21 @@ export function blackListUser(user: string, croissantsCount: number): string {
   return messages.join('\n');
 }
 
+export function unblackListUser(user: string): string {
+  const messages = [];
+  const userIndex = blackListedUsers.indexOf(user);
+  if (userIndex < 0) {
+    messages.push(`Hey <@${user}>, you're not blacklisted!`);
+  } else {
+    blackListedUsers.splice(userIndex, 1);
+    messages.push(
+      `<@${user}> you've successfully been deleted from the blacklist, welcome again sir :)`
+    );
+  }
+
+  return messages.join('\n');
+}
+
 export function blacklistList(): string {
   const messages = [];
   messages.push(`Here's a list of all blacklisted users (shame to them) :`);

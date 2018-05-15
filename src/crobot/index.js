@@ -13,7 +13,12 @@ import {
   getCroissantedList,
   voteForUncroissantedUser,
 } from './croissants';
-import { blackListUser, isBlackListed, blacklistList } from './blacklist';
+import {
+  blackListUser,
+  isBlackListed,
+  blacklistList,
+  unblackListUser,
+} from './blacklist';
 
 import {
   extractTaggedUsersFromText,
@@ -95,6 +100,8 @@ export class Crobot {
       const { user: sendUser } = message;
       if (text.match(/croissant/g)) {
         responseMessage = this.onCroissantedUser(sendUser);
+      } else if (text.match(/unblacklist me/g)) {
+        responseMessage = this.onUnblacklistedUser(sendUser);
       } else if (text.match(/blacklist me/g)) {
         responseMessage = this.onBlacklistedUser(sendUser);
       } else if (text.match(/blacklist list/g)) {
@@ -142,6 +149,10 @@ export class Crobot {
   onBlacklistedUser(user: string): string {
     const croissantsCount = getUserCroissantsCount(user);
     return blackListUser(user, croissantsCount);
+  }
+
+  onUnblacklistedUser(user: string): string {
+    return unblackListUser(user);
   }
 
   onBlacklistList(): string {
