@@ -66,8 +66,8 @@ export function voteForUncroissantedUser(
     return `Error`;
   }
   if (croissantedUser == userVote) {
-    decreaseUserCroissantsCount(croissantedUser);
-    return `<@${croissantedUser}> You are a real cheater are'nt you ? One more breakfast to bring !`;
+    const newCroissantsCount = increaseUserCroissantsCount(croissantedUser);
+    return `<@${croissantedUser}> You are a real cheater are'nt you ? One more breakfast to bring, you now have a debt of ${newCroissantsCount} more croissants ! :croissant:`;
   }
   if (getUserCroissantsCount(croissantedUser) === 0) {
     return `<@${croissantedUser}> Currently has no debt !`;
@@ -83,7 +83,11 @@ export function voteForUncroissantedUser(
   }
   if (nbVotes === 2) {
     const newCroissantsCount = decreaseUserCroissantsCount(croissantedUser);
-    return `<@${croissantedUser}> paid his/her croissants and now needs to bring breakfast ${newCroissantsCount} time(s)! :sunglasses:`;
+    if (newCroissantsCount === 0) {
+      return `<@${croissantedUser}> paid his/her croissants and now does not have a debt anymore :sunglasses:`;
+    } else {
+      return `<@${croissantedUser}> paid his/her croissants and now needs to bring breakfast ${newCroissantsCount} time(s)! :sunglasses:`;
+    }
   }
   return `<@${userVote}> Your vote has been take in count`;
 }

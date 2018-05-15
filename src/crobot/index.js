@@ -9,7 +9,6 @@ import {
 
 import {
   increaseUserCroissantsCount,
-  decreaseUserCroissantsCount,
   getUserCroissantsCount,
   getCroissantedList,
   voteForUncroissantedUser,
@@ -101,12 +100,12 @@ export class Crobot {
       } else if (text.match(/list/g)) {
         responseMessage = getCroissantedList();
       } else if (text.match(/paid/g)) {
-        responseMessage = this.onUncroissantedUser(sendUser);
-      } else if (text.match(/a payé/g)) {
         responseMessage = this.onVoteForUncroissantedUser(
           sendUser,
           taggedUsernames
         );
+      } else if (text.match(/leviosa/g)) {
+        responseMessage = `Stop it <@${message.user}>, stoooooop :leviosa:`;
       } else {
         responseMessage = `<@${
           message.user
@@ -127,12 +126,6 @@ export class Crobot {
     const newCroissantsCount = increaseUserCroissantsCount(user);
 
     return `<@${user}> now needs to bring breakfast ${newCroissantsCount} time(s)! :sunglasses:`;
-  }
-
-  onUncroissantedUser(user: string): string {
-    const newCroissantsCount = decreaseUserCroissantsCount(user);
-
-    return `<@${user}> paid his/her croissants and now needs to bring breakfast ${newCroissantsCount} time(s)! :sunglasses:`;
   }
 
   onVoteForUncroissantedUser(user: string, taggedUsernames: string[]): string {
