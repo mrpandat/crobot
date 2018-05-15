@@ -11,30 +11,27 @@ export function getUserCroissantsCount(user: string): number {
   return croissantedUsers[user] ? croissantedUsers[user].debt : 0;
 }
 
-export function getUserVoteCount(croissantedUser: string): number {
+export function getvotingUserCount(croissantedUser: string): number {
   return croissantedUsers[croissantedUser] &&
     croissantedUsers[croissantedUser].vote
     ? croissantedUsers[croissantedUser].vote.length
     : 0;
 }
 
-export function increaseVoteList(croissantedUser: string, userVote: string) {
-  croissantedUsers[croissantedUser].vote.push(userVote);
+export function increaseVoteList(croissantedUser: string, votingUser: string) {
+  croissantedUsers[croissantedUser].vote.push(votingUser);
 }
 
 export function resetVoteList(croissantedUser: string) {
   croissantedUsers[croissantedUser].vote = [];
 }
 
-export function checkIfUserHasVoted(user: string, userVote: string) {
-  if (
+export function hasUserVoted(user: string, votingUser: string) {
+  return (
     croissantedUsers[user] &&
     croissantedUsers[user].vote &&
-    croissantedUsers[user].vote.indexOf(userVote) >= 0
-  ) {
-    return true;
-  }
-  return false;
+    croissantedUsers[user].vote.indexOf(votingUser) >= 0
+  );
 }
 
 export function increaseUserCroissantsCount(user: string): number {
@@ -60,27 +57,31 @@ export function decreaseUserCroissantsCount(user: string): number {
 
 export function voteForUncroissantedUser(
   croissantedUser: ?string,
-  userVote: string
+  votingUser: string
 ): string {
   if (!croissantedUser) {
     return `Error`;
   }
-  if (croissantedUser == userVote) {
+
+  if (croissantedUser == votingUser) {
     const newCroissantsCount = increaseUserCroissantsCount(croissantedUser);
-    return `<@${croissantedUser}> You are a real cheater are'nt you ? One more breakfast to bring, you now have a debt of ${newCroissantsCount} more croissants ! :croissant:`;
+    return `<@${croissantedUser}> You are a real cheater are'nt you ? One more breakfast to bring, you now have a debt of ${newCroissantsCount} croissants ! :croissant:`;
   }
+
   if (getUserCroissantsCount(croissantedUser) === 0) {
     return `<@${croissantedUser}> Currently has no debt !`;
   }
-  let nbVotes = getUserVoteCount(croissantedUser);
+
+  let nbVotes = getvotingUserCount(croissantedUser);
   if (nbVotes < 2) {
-    if (!checkIfUserHasVoted(croissantedUser, userVote)) {
-      increaseVoteList(croissantedUser, userVote);
+    if (!hasUserVoted(croissantedUser, votingUser)) {
+      increaseVoteList(croissantedUser, votingUser);
       nbVotes++;
     } else {
-      return `<@${userVote}> You can't vote two times, cheater !`;
+      return `<@${votingUser}> You can't vote two times, cheater !`;
     }
   }
+
   if (nbVotes === 2) {
     const newCroissantsCount = decreaseUserCroissantsCount(croissantedUser);
     if (newCroissantsCount === 0) {
@@ -89,7 +90,8 @@ export function voteForUncroissantedUser(
       return `<@${croissantedUser}> paid his/her croissants and now needs to bring breakfast ${newCroissantsCount} time(s)! :sunglasses:`;
     }
   }
-  return `<@${userVote}> Your vote has been take in count`;
+
+  return `<@${votingUser}> Your vote has been take in count`;
 }
 
 export function getCroissantedList(): string {
