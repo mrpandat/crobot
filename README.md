@@ -38,6 +38,14 @@ This command will output how many times the _croissanted_ user have to bring bre
 
 > Looks like `<user>` needs to bring breakfast `<count>` times!
 
+### Get off the Crobot's list
+
+To get off the Crobot's list, 2 people have to ping crobot with the keyword `paid` and tell he/she has paid his/her debt.
+
+> @crobot @Jean has paid his debt
+
+Don't try to cheat, it will be sanctionned ! ;)
+
 ### Get the Crobot's list
 
 You can ask Crobot the list of users' breakfast debts by pinging it with the keyword `list`
@@ -65,8 +73,6 @@ To get a list of blacklisted users:
 
 ## Next things to do
 
-* Find an easy way to tell Crobot that someone paid one of his debts
-* Add documentation about the fact of being blacklisted
 * Add an help command to explain how Crobot works
 * Switch from RTM API to Web API
-* Think of any other functionalities to add
+* Find a way to store your data so they are not lost when you restart crobot
