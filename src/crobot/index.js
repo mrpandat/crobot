@@ -92,7 +92,7 @@ export class Crobot {
 
     if (taggedUsernames.includes(this.name)) {
       let responseMessage;
-      let sendUser = message.user;
+      const { user: sendUser } = message;
       if (text.match(/croissant/g)) {
         responseMessage = this.onCroissantedUser(sendUser);
       } else if (text.match(/blacklist me/g)) {
@@ -107,11 +107,9 @@ export class Crobot {
           taggedUsernames
         );
       } else if (text.match(/leviosa/g)) {
-        responseMessage = `Stop it <@${message.user}>, stoooooop :leviosa:`;
+        responseMessage = `Stop it <@${sendUser}>, stoooooop :leviosa:`;
       } else {
-        responseMessage = `<@${
-          message.user
-        }> I did not understand your message, sorry !`;
+        responseMessage = `<@${sendUser}> I did not understand your message, sorry !`;
       }
 
       if (responseMessage) {
