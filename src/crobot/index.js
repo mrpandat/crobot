@@ -135,8 +135,8 @@ export class Crobot {
     return `<@${user}> paid his/her croissants and now needs to bring breakfast ${newCroissantsCount} time(s)! :sunglasses:`;
   }
 
-  onVoteForUncroissantedUser(user: string, taggedUsernames: [string]): string {
-    if (taggedUsernames[1]) {
+  onVoteForUncroissantedUser(user: string, taggedUsernames: string[]): string {
+    if (taggedUsernames.length > 1 && taggedUsernames[1]) {
       return voteForUncroissantedUser(
         usernameToUserid(taggedUsernames[1], this.users),
         user

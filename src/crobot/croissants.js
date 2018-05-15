@@ -3,8 +3,8 @@
 const croissantedUsers: {
   [key: string]: {
     debt: number,
-    vote: [string],
-  }
+    vote: string[],
+  },
 } = {};
 
 export function getUserCroissantsCount(user: string): number {
@@ -12,7 +12,8 @@ export function getUserCroissantsCount(user: string): number {
 }
 
 export function getUserVoteCount(croissantedUser: string): number {
-  return croissantedUsers[croissantedUser]
+  return croissantedUsers[croissantedUser] &&
+    croissantedUsers[croissantedUser].vote
     ? croissantedUsers[croissantedUser].vote.length
     : 0;
 }
@@ -29,7 +30,7 @@ export function checkIfUserHasVoted(user: string, userVote: string) {
   if (
     croissantedUsers[user] &&
     croissantedUsers[user].vote &&
-    !croissantedUsers[user].vote.indexOf(userVote) > 0
+    croissantedUsers[user].vote.indexOf(userVote) >= 0
   ) {
     return true;
   }
@@ -58,9 +59,12 @@ export function decreaseUserCroissantsCount(user: string): number {
 }
 
 export function voteForUncroissantedUser(
-  croissantedUser: string,
+  croissantedUser: ?string,
   userVote: string
 ): string {
+  if (!croissantedUser) {
+    return `Error`;
+  }
   if (croissantedUser == userVote) {
     decreaseUserCroissantsCount(croissantedUser);
     return `<@${croissantedUser}> You are a real cheater are'nt you ? One more breakfast to bring !`;
