@@ -66,10 +66,14 @@ To blacklist you:
 > @crobot blacklist me
 
 To get a list of blacklisted users:
+> @crobot blacklist list
 
 > * `<user1>`
 > * `<user2>`
 > * `<user3>`
+
+To get off the blacklist:
+> @crobot unblacklist me
 
 ## Next things to do
 
