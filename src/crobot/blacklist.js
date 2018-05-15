@@ -26,3 +26,12 @@ export function blackListUser(user: string, croissantsCount: number): string {
 
   return messages.join('\n');
 }
+
+export function blacklistList(): string {
+  const messages = [];
+  messages.push(`Here's a list of all blacklisted users (shame to them) :`);
+  blackListedUsers.map(blUser => {
+    messages.push(`<@${blUser}>`);
+  });
+  return messages.join('\n');
+}

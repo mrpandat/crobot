@@ -50,11 +50,23 @@ This will output something like:
 > * `<user2>`: `<count>` times
 > * `<user3>`: `<count>` times
 
+### Blacklisted users
+
+You can ask Crobot to blacklist you. When you are blacklisted, you can't be croissanted anymore, but you still have to pay your debt.
+
+To blacklist you:
+> @crobot blacklist me
+
+To get a list of blacklisted users:
+
+> * `<user1>`
+> * `<user2>`
+> * `<user3>`
+
 ## Next things to do
 
 * Find an easy way to tell Crobot that someone paid one of his debts
 * Add documentation about the fact of being blacklisted
-* Add a command to get the list of blacklisted users
 * Add an help command to explain how Crobot works
 * Switch from RTM API to Web API
 * Think of any other functionalities to add
