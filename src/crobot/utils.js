@@ -24,7 +24,7 @@ export function throwIfNull(key: string): string {
 
 export function userIdToUsername(id: string, users: any): ?string {
   for (var uid in users) {
-    if (users[uid].id == id) {
+    if (users[uid].id === id) {
       return users[uid].name;
     }
   }
@@ -32,7 +32,7 @@ export function userIdToUsername(id: string, users: any): ?string {
 
 export function usernameToUserid(username: string, users: any): ?string {
   for (var uid in users) {
-    if (users[uid].name == username) {
+    if (users[uid].name === username) {
       return users[uid].id;
     }
   }
