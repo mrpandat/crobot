@@ -43,10 +43,9 @@ export function unblackListUser(user: string): string {
 }
 
 export function blacklistList(): string {
-  const messages = [];
-  messages.push(`Here's a list of all blacklisted users (shame to them) :`);
-  blackListedUsers.map(blUser => {
-    messages.push(`<@${blUser}>`);
-  });
+  const messages = [
+    `Here's a list of all blacklisted users (shame to them) :`,
+    ...blackListedUsers.map(blUser => `<@${blUser}>`),
+  ];
   return messages.join('\n');
 }
